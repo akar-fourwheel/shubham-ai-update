@@ -53,7 +53,14 @@ from audio_utils import _mp3_to_pcm, _pcm_to_wav, _is_silence
 # ── STARTUP / SHUTDOWN ─────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    keep_alive()
+    import threading, time
+
+    def start_keep_alive():
+        time.sleep(5)  # wait for server to be ready
+        keep_alive()
+
+    threading.Thread(target=start_keep_alive, daemon=True).start()
+    
     print(f"\n{'='*60}")
     print("  SHUBHAM MOTORS AI AGENT — OPTIMIZED BUILD")
     print(f"  {config.BUSINESS_NAME}, {config.BUSINESS_CITY}")
